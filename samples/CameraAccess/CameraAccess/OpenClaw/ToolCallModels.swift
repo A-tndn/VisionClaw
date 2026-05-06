@@ -1,3 +1,8 @@
+// samples/CameraAccess/CameraAccess/OpenClaw/ToolCallModels.swift
+//
+// Modified from upstream: ToolDeclarations.allDeclarations() now includes
+// `recall` and `remember` for the rio-memory bridge alongside `execute`.
+
 import Foundation
 
 // MARK: - Gemini Tool Call (parsed from server JSON)
@@ -85,12 +90,12 @@ enum ToolCallStatus: Equatable {
 enum ToolDeclarations {
 
   static func allDeclarations() -> [[String: Any]] {
-    return [execute]
+    return [execute, recall, remember]
   }
 
   static let execute: [String: Any] = [
     "name": "execute",
-    "description": "Your only way to take action. You have no memory, storage, or ability to do anything on your own -- use this tool for everything: sending messages, searching the web, adding to lists, setting reminders, creating notes, research, drafts, scheduling, smart home control, app interactions, or any request that goes beyond answering a question. When in doubt, use this tool.",
+    "description": "Take action that goes beyond simple Q&A: send messages, search the web, control apps, place orders, manage smart home, draft and send things. For anything you can't answer purely from rio-memory or your own knowledge, use this tool.",
     "parameters": [
       "type": "object",
       "properties": [
@@ -100,6 +105,58 @@ enum ToolDeclarations {
         ]
       ],
       "required": ["task"]
+    ] as [String: Any],
+    "behavior": "BLOCKING"
+  ]
+
+  static let recall: [String: Any] = [
+    "name": "recall",
+    "description": "Search Rio's persistent cross-surface memory using semantic search. Use this BEFORE answering anything that depends on past conversations, the user's projects, preferences, or facts they previously told you. Always recall first when the user references something they 'said before', 'mentioned', or any topic that may have prior context. Returns the top matching memory entries with their content.",
+    "parameters": [
+      "type": "object",
+      "properties": [
+        "query": [
+          "type": "string",
+          "description": "Natural language query describing what you're looking for. Examples: 'how does Ajay want me to communicate', 'RIO Coin treasury', 'session betting method', 'what's on my plate this week'."
+        ],
+        "limit": [
+          "type": "integer",
+          "description": "Max number of memory entries to return (default 5, max 10)."
+        ],
+        "type": [
+          "type": "string",
+          "description": "Optional filter by memory type. One of: user, feedback, project, reference, log."
+        ]
+      ],
+      "required": ["query"]
+    ] as [String: Any],
+    "behavior": "BLOCKING"
+  ]
+
+  static let remember: [String: Any] = [
+    "name": "remember",
+    "description": "Save a durable memory entry to Rio's cross-surface memory backbone. Use this when the user explicitly asks you to remember something OR when you observe something genuinely useful for future sessions: a preference, a fact about an ongoing project, a constraint, a reference to an external system. Avoid storing transient or session-only context. Will overwrite if the same name exists.",
+    "parameters": [
+      "type": "object",
+      "properties": [
+        "name": [
+          "type": "string",
+          "description": "Short unique identifier for the memory (used as primary key). Lowercase, dashed if multi-word. Examples: 'preferred-takeout-place', 'rio-coin-launch-deadline'."
+        ],
+        "type": [
+          "type": "string",
+          "description": "Type of memory. user=identity/preferences; feedback=how to behave; project=ongoing work/decisions/why; reference=pointer to external system; log=ambient observation."
+        ],
+        "body": [
+          "type": "string",
+          "description": "The memory content. Be specific; include why and how to apply if relevant. For feedback/project entries, structure with **Why:** and **How to apply:** lines."
+        ],
+        "description": [
+          "type": "string",
+          "description": "Optional one-line summary used when surfacing the memory."
+        ]
+      ],
+      "required": ["name", "type", "body"]
     ] as [String: Any],
     "behavior": "BLOCKING"
   ]

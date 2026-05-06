@@ -16,6 +16,8 @@ final class SettingsManager {
     case speakerOutputEnabled
     case videoStreamingEnabled
     case proactiveNotificationsEnabled
+    case rioMemoryURL
+    case rioMemoryAPIKey
   }
 
   private init() {}
@@ -85,13 +87,25 @@ final class SettingsManager {
     set { defaults.set(newValue, forKey: Key.proactiveNotificationsEnabled.rawValue) }
   }
 
+  // MARK: - Rio Memory bridge (cross-surface persistent memory)
+
+  var rioMemoryURL: String {
+    get { defaults.string(forKey: Key.rioMemoryURL.rawValue) ?? Secrets.rioMemoryURL }
+    set { defaults.set(newValue, forKey: Key.rioMemoryURL.rawValue) }
+  }
+
+  var rioMemoryAPIKey: String {
+    get { defaults.string(forKey: Key.rioMemoryAPIKey.rawValue) ?? Secrets.rioMemoryAPIKey }
+    set { defaults.set(newValue, forKey: Key.rioMemoryAPIKey.rawValue) }
+  }
+
   // MARK: - Reset
 
   func resetAll() {
     for key in [Key.geminiAPIKey, .geminiSystemPrompt, .openClawHost, .openClawPort,
                 .openClawHookToken, .openClawGatewayToken, .webrtcSignalingURL,
                 .speakerOutputEnabled, .videoStreamingEnabled,
-                .proactiveNotificationsEnabled] {
+                .proactiveNotificationsEnabled, .rioMemoryURL, .rioMemoryAPIKey] {
       defaults.removeObject(forKey: key.rawValue)
     }
   }
