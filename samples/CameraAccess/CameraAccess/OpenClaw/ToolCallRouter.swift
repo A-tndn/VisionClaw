@@ -48,7 +48,10 @@ class ToolCallRouter {
 
       case "recall":
         let q = (call.args["query"] as? String) ?? ""
-        let limit = (call.args["limit"] as? Int) ?? 5
+        let limit = (call.args["limit"] as? Int)
+          ?? (call.args["limit"] as? Double).map { Int($0) }
+          ?? (call.args["limit"] as? NSNumber)?.intValue
+          ?? 5
         let typeFilter = call.args["type"] as? String
         if q.isEmpty {
           result = .failure("recall requires a 'query' argument")
@@ -67,9 +70,12 @@ class ToolCallRouter {
           result = await RioMemoryService.shared.remember(name: name, type: type, body: body, description: desc)
         }
 
-      default:
+      case "execute":
         let taskDesc = call.args["task"] as? String ?? String(describing: call.args)
         result = await bridge.delegateTask(task: taskDesc, toolName: callName)
+
+      default:
+        result = .failure("Unknown tool '\(callName)'. Available tools: execute, recall, remember.")
       }
 
       guard !Task.isCancelled else {

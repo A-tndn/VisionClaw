@@ -125,7 +125,8 @@ enum ToolDeclarations {
         ],
         "type": [
           "type": "string",
-          "description": "Optional filter by memory type. One of: user, feedback, project, reference, log."
+          "description": "Optional filter by memory type.",
+          "enum": ["user", "feedback", "project", "reference", "log"]
         ]
       ],
       "required": ["query"]
@@ -145,7 +146,8 @@ enum ToolDeclarations {
         ],
         "type": [
           "type": "string",
-          "description": "Type of memory. user=identity/preferences; feedback=how to behave; project=ongoing work/decisions/why; reference=pointer to external system; log=ambient observation."
+          "description": "Type of memory. user=identity/preferences; feedback=how to behave; project=ongoing work/decisions/why; reference=pointer to external system; log=ambient observation.",
+          "enum": ["user", "feedback", "project", "reference", "log"]
         ],
         "body": [
           "type": "string",
