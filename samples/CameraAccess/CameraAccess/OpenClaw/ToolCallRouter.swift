@@ -1,3 +1,9 @@
+// samples/CameraAccess/CameraAccess/OpenClaw/ToolCallRouter.swift
+//
+// Modified from upstream: switches on call.name. `recall` and `remember`
+// route to RioMemoryService (direct rio-memory HTTP). Everything else falls
+// through to OpenClawBridge.delegateTask as before.
+
 import Foundation
 
 @MainActor
@@ -11,8 +17,8 @@ class ToolCallRouter {
     self.bridge = bridge
   }
 
-  /// Route a tool call from Gemini to OpenClaw. Calls sendResponse with the
-  /// JSON dictionary to send back as a toolResponse message.
+  /// Route a tool call from Gemini. `recall`/`remember` go to rio-memory;
+  /// everything else delegates to OpenClaw via the bridge.
   func handleToolCall(
     _ call: GeminiFunctionCall,
     sendResponse: @escaping ([String: Any]) -> Void
@@ -23,8 +29,8 @@ class ToolCallRouter {
     NSLog("[ToolCall] Received: %@ (id: %@) args: %@",
           callName, callId, String(describing: call.args))
 
-    // Circuit breaker: stop sending tool calls after repeated failures
-    if consecutiveFailures >= maxConsecutiveFailures {
+    // Circuit breaker (only counts OpenClaw failures; memory ops should not trip it)
+    if consecutiveFailures >= maxConsecutiveFailures && callName == "execute" {
       NSLog("[ToolCall] Circuit breaker open (%d consecutive failures), rejecting %@",
             consecutiveFailures, callId)
       let errorResult: ToolResult = .failure(
@@ -37,19 +43,52 @@ class ToolCallRouter {
     }
 
     let task = Task { @MainActor in
-      let taskDesc = call.args["task"] as? String ?? String(describing: call.args)
-      let result = await bridge.delegateTask(task: taskDesc, toolName: callName)
+      let result: ToolResult
+      switch callName {
+
+      case "recall":
+        let q = (call.args["query"] as? String) ?? ""
+        let limit = (call.args["limit"] as? Int)
+          ?? (call.args["limit"] as? Double).map { Int($0) }
+          ?? (call.args["limit"] as? NSNumber)?.intValue
+          ?? 5
+        let typeFilter = call.args["type"] as? String
+        if q.isEmpty {
+          result = .failure("recall requires a 'query' argument")
+        } else {
+          result = await RioMemoryService.shared.recall(query: q, limit: limit, type: typeFilter)
+        }
+
+      case "remember":
+        let name = (call.args["name"] as? String) ?? ""
+        let type = (call.args["type"] as? String) ?? ""
+        let body = (call.args["body"] as? String) ?? ""
+        let desc = call.args["description"] as? String
+        if name.isEmpty || type.isEmpty || body.isEmpty {
+          result = .failure("remember requires name, type, and body")
+        } else {
+          result = await RioMemoryService.shared.remember(name: name, type: type, body: body, description: desc)
+        }
+
+      case "execute":
+        let taskDesc = call.args["task"] as? String ?? String(describing: call.args)
+        result = await bridge.delegateTask(task: taskDesc, toolName: callName)
+
+      default:
+        result = .failure("Unknown tool '\(callName)'. Available tools: execute, recall, remember.")
+      }
 
       guard !Task.isCancelled else {
         NSLog("[ToolCall] Task %@ was cancelled, skipping response", callId)
         return
       }
 
-      switch result {
-      case .success:
-        self.consecutiveFailures = 0
-      case .failure:
-        self.consecutiveFailures += 1
+      // Only count OpenClaw failures toward the circuit breaker
+      if callName == "execute" {
+        switch result {
+        case .success: self.consecutiveFailures = 0
+        case .failure: self.consecutiveFailures += 1
+        }
       }
 
       NSLog("[ToolCall] Result for %@ (id: %@): %@",
