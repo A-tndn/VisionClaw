@@ -330,6 +330,56 @@ a.linkish{text-decoration:underline dotted}
   .thread path{stroke-dashoffset:0}.thread circle{opacity:1}
   html{scroll-behavior:auto}
 }
+
+/* ---------- values band ---------- */
+.values{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:0;border-bottom:1px solid var(--line);max-width:1240px;margin:0 auto}
+.value{padding:2.4rem clamp(1.2rem,3vw,2.4rem);border-top:1px solid transparent}
+.value+.value{border-left:1px solid var(--line)}
+@media(max-width:940px){.value+.value{border-left:none;border-top:1px solid var(--line)}}
+.value .glyph{color:var(--kesar);font-family:var(--serif);font-size:1.6rem;display:block;margin-bottom:.7rem}
+.value h3{font-size:.74rem;letter-spacing:.32em;text-transform:uppercase;color:var(--ivory);font-weight:800;margin-bottom:.6rem}
+.value p{color:var(--muted);font-size:.9rem}
+
+/* ---------- content pages ---------- */
+.page.wide{max-width:980px}
+.prose{max-width:65ch}
+.prose p{color:var(--muted);margin-bottom:1.1rem;font-size:1rem}
+.prose p b,.prose p strong{color:var(--ivory)}
+.prose h2{font-family:var(--serif);font-weight:400;font-size:1.7rem;letter-spacing:.04em;margin:2.2rem 0 .9rem;color:var(--ivory)}
+.prose h2:first-child{margin-top:0}
+.prose ul{margin:0 0 1.1rem 1.2rem;color:var(--muted)}
+.prose li{margin-bottom:.45rem}
+.prose li::marker{color:var(--kesar)}
+.prose .date{font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--kesar)}
+details.fold{border:1px solid var(--line);border-radius:14px;background:var(--cacao-2);margin-bottom:.8rem;overflow:hidden}
+details.fold summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:1.1rem 1.3rem;font-weight:700}
+details.fold summary::-webkit-details-marker{display:none}
+details.fold summary::after{content:"+";color:var(--kesar);font-size:1.2rem;flex:none;transition:transform .25s}
+details.fold[open] summary::after{transform:rotate(45deg)}
+details.fold summary .when{color:var(--muted);font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;font-weight:400;flex:none}
+details.fold .fold-body{padding:0 1.3rem 1.2rem;color:var(--muted);font-size:.95rem}
+details.fold .fold-body p{margin-bottom:.9rem}
+.twrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--cacao-2)}
+.ntable{width:100%;border-collapse:collapse;font-size:.9rem;min-width:640px}
+.ntable th,.ntable td{padding:.75rem 1rem;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+.ntable th:first-child,.ntable td:first-child{text-align:left}
+.ntable thead th{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--kesar);font-weight:800}
+.ntable td{color:var(--muted);font-variant-numeric:tabular-nums}
+.ntable td:first-child{color:var(--ivory);font-weight:700;white-space:normal}
+.ntable tbody tr:last-child td{border-bottom:none}
+.gift-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;margin:1.6rem 0}
+.gift{background:var(--cacao-2);border:1px solid var(--line);border-radius:16px;padding:1.6rem}
+.gift h3{font-family:var(--serif);font-weight:400;font-size:1.4rem;letter-spacing:.04em;margin-bottom:.3rem}
+.gift .from{color:var(--kesar);font-weight:800;font-variant-numeric:tabular-nums;font-size:.9rem;letter-spacing:.08em;display:block;margin-bottom:.8rem}
+.gift p{color:var(--muted);font-size:.9rem}
+.sitemap-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem}
+.sitemap-cols h2{font-size:.72rem;letter-spacing:.34em;text-transform:uppercase;color:var(--kesar);margin-bottom:1rem;font-family:var(--sans);font-weight:800}
+.sitemap-cols ul{list-style:none;margin:0}
+.sitemap-cols li{margin-bottom:.5rem}
+.sitemap-cols a{color:var(--muted);text-decoration:none;font-size:.95rem}
+.sitemap-cols a:hover{color:var(--kesar)}
+.cta-band{border:1px solid var(--line);border-left:3px solid var(--kesar);border-radius:12px;background:var(--cacao-2);padding:1.4rem 1.6rem;margin-top:2rem;display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.cta-band p{color:var(--muted);font-size:.95rem;margin:0}
 </style>
 </head>
 <body>
@@ -549,7 +599,7 @@ function renderShop(){
   '<header class="hdr" id="hdr">'
   + '<a class="hdr-mark" href="#top">Kesar <span class="amp">&amp;</span> Crumb</a>'
   + '<nav class="hdr-nav">'
-  + '<a href="#vitrine">The Vitrine</a><a href="#standard">The Standard</a><a href="#bespoke">Bespoke</a><a href="#track">Track</a>'
+  + '<a href="#vitrine">The Vitrine</a><a href="#story">Our Story</a><a href="#cakes">Cakes</a><a href="#track">Track</a>'
   + '<a href="#vitrine" class="always" style="color:var(--kesar)">Order</a>'
   + '</nav></header>'
   + '<section class="hero" id="top">'
@@ -563,6 +613,7 @@ function renderShop(){
   + '<div class="marquee" aria-hidden="true"><div class="marquee-track">'
   + FLAVORS.concat(FLAVORS).map(function(f){ return '<span>'+f+' <i>·</i></span>'; }).join('')
   + '</div></div>'
+  + valuesBand()
   + '<section class="sec" id="vitrine">'
   + '<div class="sec-head"><div><span class="kicker rv">This morning’s bake</span><h2 class="sec-title rv">The Vitrine</h2></div>'
   + '<p class="sec-note rv">Baked in small batches from 4 a.m. Order for same-day pickup, or delivery within the city before 8 p.m.</p></div>'
@@ -584,14 +635,31 @@ function renderShop(){
   + '<button class="btn btn-gold" id="bespoke-btn">Start a bespoke order</button>'
   + '</div></section>'
   + '<footer class="ftr"><div class="ftr-grid">'
-  + '<div><p class="ftr-mark">K<span style="color:var(--kesar)">&amp;</span>C</p><p style="margin-top:.6rem">Food of the gods,<br>baked before sunrise.</p></div>'
-  + '<div><h4>Hours</h4><ul><li>Tue – Sun · 7:00 – 21:00</li><li>Monday · oven rest</li></ul></div>'
-  + '<div><h4>Ateliers</h4><ul><li>Khan Market, New Delhi</li><li>Colaba Causeway, Bombay</li><li>Indiranagar, Bangalore</li></ul></div>'
-  + '<div><h4>Orders</h4><ul>'
+  + '<div><p class="ftr-mark">K<span style="color:var(--kesar)">&amp;</span>C</p><p style="margin-top:.6rem">Food of the gods,<br>baked before sunrise.</p>'
+  + '<p style="margin-top:.9rem;font-size:.85rem">Tue – Sun · 7:00 – 21:00<br>Monday · oven rest</p></div>'
+  + '<div><h4>Explore</h4><ul>'
+  + '<li><a class="linkish" href="#story">Our story</a></li>'
+  + '<li><a class="linkish" href="#products">Our products</a></li>'
+  + '<li><a class="linkish" href="#cakes">Speciality cakes</a></li>'
+  + '<li><a class="linkish" href="#blog">The journal</a></li>'
+  + '<li><a class="linkish" href="#csr">Community (CSR)</a></li>'
+  + '</ul></div>'
+  + '<div><h4>Orders &amp; help</h4><ul>'
   + '<li><a class="linkish" href="#track">Track an order</a></li>'
   + '<li><a class="linkish" href="#feedback">Leave feedback</a></li>'
+  + '<li><a class="linkish" href="#faqs">FAQs</a></li>'
+  + '<li><a class="linkish" href="#nutrition">Nutritional info</a></li>'
+  + '<li><a class="linkish" href="#gifting">Corporate gifting</a></li>'
   + '<li><a class="linkish" href="#admin">Atelier desk</a></li>'
   + '</ul></div>'
+  + '<div><h4>Fine print</h4><ul>'
+  + '<li><a class="linkish" href="#privacy">Privacy policy</a></li>'
+  + '<li><a class="linkish" href="#cookies">Cookie policy</a></li>'
+  + '<li><a class="linkish" href="#refunds">Refund policy</a></li>'
+  + '<li><a class="linkish" href="#whistleblower">Whistle-blower policy</a></li>'
+  + '<li><a class="linkish" href="#sitemap">Sitemap</a></li>'
+  + '</ul></div>'
+  + '<div><h4>Ateliers</h4><ul><li>Khan Market, New Delhi</li><li>Colaba Causeway, Bombay</li><li>Indiranagar, Bangalore</li></ul></div>'
   + '</div><div class="ftr-base"><span>Kesar &amp; Crumb — a fictional patisserie, baked as a demo.</span><span>Est. MMXVI</span></div></footer>'
   + '<button class="cart-fab" id="cart-fab" hidden>Order <span class="n" id="cart-n">0</span></button>'
   + '<div class="scrim" id="scrim"></div>'
@@ -656,6 +724,7 @@ function pageShell(title, sub, inner){
   + '<div class="scrim" id="scrim"></div>'
   + '<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="modal-card" id="modal-card"></div></div>'
   + '<div class="toast" id="toast"></div>';
+  document.querySelectorAll('.rv').forEach(function(el){ el.classList.add('in'); });
   scrollTo(0,0);
 }
 
@@ -1197,11 +1266,176 @@ function exportCSV(kind){
   }).catch(function(e){ toast(e.message); });
 }
 
+/* ================= VALUES BAND & STATIC PAGES ================= */
+function valuesBand(){
+  var V=[
+    ['I','Authentic recipes','Home-style recipes written down by grandmothers and argued over by chefs — made fresh from scratch every morning.'],
+    ['II','Baked with love','Every tray leaves the oven with someone’s name on it. We bake to serve smiles, not shelves.'],
+    ['III','Committed to quality','From the farms we buy from to the box we hand over, quality is the one ingredient we never substitute.'],
+    ['IV','Honestly priced','The best bake at the right price — no gold-leaf taxes, and no surge pricing on birthdays.']
+  ];
+  return '<div class="values">'+V.map(function(v){
+    return '<div class="value rv"><span class="glyph">'+v[0]+'</span><h3>'+v[1]+'</h3><p>'+v[2]+'</p></div>';
+  }).join('')+'</div>';
+}
+
+function fold(title, when, body){
+  return '<details class="fold"><summary>'+title+(when?'<span class="when">'+when+'</span>':'')+'</summary><div class="fold-body">'+body+'</div></details>';
+}
+var NUTRITION={
+ 'saffron-croissant':[340,7,33,11,20,'gluten, dairy, nuts'],
+ 'cardamom-kouign':[380,5,46,24,20,'gluten, dairy'],
+ 'rose-entremet':[450,6,48,34,25,'dairy, egg'],
+ 'gondhoraj-tart':[390,6,42,26,22,'gluten, dairy, egg'],
+ 'cacao-torte':[420,8,36,24,28,'dairy, egg'],
+ 'filter-tiramisu':[410,9,38,22,24,'gluten, dairy, egg'],
+ 'jaggery-brownie':[330,5,40,28,17,'gluten, dairy, egg, nuts'],
+ 'mawa-bun':[290,7,38,14,12,'gluten, dairy']
+};
+function giftWaLink(tier){
+  var msg='Hello Kesar & Crumb — I’d like to talk about corporate gifting ('+tier+').';
+  return 'https://wa.me/'+waNum(BOOT.whatsapp)+'?text='+encodeURIComponent(msg);
+}
+var STATIC_PAGES={
+  story:function(){ return {title:'Our story', sub:'Food of the gods, baked before sunrise.', wide:false, html:
+    '<div class="prose">'
+    +'<p><b>Kesar &amp; Crumb began with an argument.</b> In the winter of 2016, in a two-table kitchen behind Khan Market, a French-trained pastry chef and a Delhi grandmother disagreed — loudly — about what a croissant should taste like. The chef said butter. The grandmother said saffron. The croissant that ended the argument had both, and the bakery that grew around it has never chosen sides since.</p>'
+    +'<p>That is still the whole idea: <b>French technique, Indian pantry.</b> Laminates rest for forty-eight hours the way Paris taught us; the custard inside steeps overnight in Pampore kesar the way Delhi insisted. Our cacao comes up from Idukki, our jaggery from Kolhapur, our coffee decoction from Chikmagalur. We name the district on the label because the district is the recipe.</p>'
+    +'<h2>The morning ritual</h2>'
+    +'<p>Every atelier lights its ovens at four in the morning. What you see in the vitrine by seven is everything there is — each bake is a finite tray, and when the last mawa bun goes, the shelf stays honest and empty until tomorrow. We think sold-out is a promise kept, not a sale missed.</p>'
+    +'<h2>Three ateliers, one kitchen wall</h2>'
+    +'<p>Khan Market in New Delhi, Colaba Causeway in Bombay, Indiranagar in Bangalore. Different cities, the same kitchen wall — the one where guest feedback is pinned and read aloud at the morning briefing. If you’ve ever left us a note, a baker has read it out loud with flour on their hands.</p>'
+    +'<div class="cta-band"><p>The vitrine changes with the seasons. The standard doesn’t.</p><a class="btn btn-gold btn-sm" href="#products">See the products</a></div>'
+    +'</div>'};},
+  products:function(){ return {title:'Our products', sub:'The full vitrine — everything bakes fresh from 4 a.m.', wide:true, html:
+    '<div class="vitrine">'+PRODUCTS.map(productCard).join('')+'</div>'
+    +'<div class="cta-band"><p>Box filled? Checkout takes under a minute — pay at the counter or the door.</p><a class="btn btn-gold btn-sm" href="#checkout">Go to checkout</a></div>'};},
+  cakes:function(){ return {title:'Speciality cakes', sub:'Built around your occasion, not pulled off a shelf.', wide:false, html:
+    '<div class="prose">'
+    +'<p>Weddings, mehendis, hundred-day parties, quiet anniversaries — a speciality cake starts with a conversation, not a catalogue. Tell us the story, the guest count and the flavours you love; our pastry chefs sketch, taste and build from there.</p>'
+    +'<h2>How it works</h2>'
+    +'<ul><li><b>Three days’ notice</b> for most builds; a week for multi-tier work.</li>'
+    +'<li><b>Sizes</b> from a half-kilo entremet for two to five-tier centrepieces.</li>'
+    +'<li><b>Flavours</b> from the vitrine or beyond it — saffron-pista, gulkand-rose, gondhoraj, single-origin cacao, filter-coffee, or the one your grandmother used to make (bring the memory, we’ll do the rest).</li>'
+    +'<li><b>Tastings</b> at any atelier, by appointment.</li>'
+    +'<li><b>Citywide delivery</b>, chilled, with setup for tiered cakes.</li></ul>'
+    +'<div class="cta-band"><p>Start with our Rose &amp; Raspberry Entremet and tell the kitchen what you dream of in the order note.</p>'
+    +'<span style="display:flex;gap:.6rem;flex-wrap:wrap"><button class="btn btn-gold btn-sm" data-addgo="rose-entremet">Start an order</button>'
+    +'<a class="btn wa-btn btn-sm" target="_blank" rel="noopener" href="'+giftWaLink('a speciality cake')+'">Talk on WhatsApp</a></span></div>'
+    +'</div>'};},
+  blog:function(){ return {title:'The journal', sub:'Notes from the four a.m. shift.', wide:false, html:
+    '<div class="prose">'
+    +fold('Why our croissant takes three days','Aug 2026',
+      '<p>Day one, the détrempe rests. Day two, the butter block goes in and the folds begin — three letter folds, each followed by a long, cold nap. Day three, at four in the morning, the sheets are rolled, cut and proofed until they wobble like they’re nervous.</p><p>Could we do it faster? Yes. Would it shatter into a hundred glassy layers when you bite it? It would not. So: three days.</p>')
+    +fold('The case for jaggery','Jul 2026',
+      '<p>White sugar is a metronome — reliable, characterless. Kolhapuri gur is a whole percussion section: smoke, minerals, a bitterness that keeps the sweetness honest. In our brownie it does what no refined sugar can — it argues back.</p><p>We buy it from a third-generation kolhapur cooperative, in blocks the size of bricks, and grate it by hand. The kitchen smells like a festival all morning.</p>')
+    +fold('What the kitchen wall taught us','Jun 2026',
+      '<p>Every piece of guest feedback gets pinned to the wall and read aloud at the morning briefing. The five-star notes are lovely. The three-star notes are the syllabus.</p><p>A guest once wrote that our lemon tart “tasted like it was apologising.” We re-tested the gondhoraj curd for a week — she was right, the zest ratio had drifted. If you’ve eaten the tart since and it stood up straight and looked you in the eye: thank her, not us.</p>')
+    +'</div>'};},
+  csr:function(){ return {title:'Community', sub:'What the ovens do after the vitrine is full.', wide:false, html:
+    '<div class="prose">'
+    +'<h2>The Four A.M. Fund</h2>'
+    +'<p>Every unsold bake — and because our trays are finite, there aren’t many — is boxed at closing and delivered the same night to partner shelters in each of our three cities. Nothing from our ovens has gone to a bin since 2019.</p>'
+    +'<h2>The apprentice bench</h2>'
+    +'<p>Each atelier keeps two paid apprenticeship seats for young people from community kitchens, no culinary school required. Twelve months, every station, and a knife roll to keep. Nine of our current bakers started on the bench.</p>'
+    +'<h2>Sourcing that holds up in daylight</h2>'
+    +'<p>We buy directly from named farms and cooperatives — Pampore for saffron, Idukki for cacao, Kolhapur for jaggery — at contracted prices agreed before the season, not after it. If a supplier has a bad harvest, the contract holds anyway. That’s what the price of a croissant is actually paying for.</p>'
+    +'</div>'};},
+  faqs:function(){ return {title:'FAQs', sub:'Asked often, answered honestly.', wide:false, html:
+    '<div class="prose">'
+    +fold('How late can I order for same-day pickup?','',
+      '<p>Order by 7 p.m. for same-day pickup (we close at 9). Delivery orders need to be in by 6 p.m. to reach you before 8.</p>')
+    +fold('Which cities do you deliver in?','',
+      '<p>New Delhi, Bombay and Bangalore — citywide from each atelier. At checkout you can pin your live location so the rider follows a map pin instead of deciphering directions.</p>')
+    +fold('Do you have eggless options?','',
+      '<p>The saffron croissant, cardamom kouign-amann and mawa bun are eggless as standard. Most speciality cakes can be built eggless — say so in the order note or when we call.</p>')
+    +fold('How do Crumb points work?','',
+      '<p>Every order earns 5% of the bill back as points, tied to your phone number. 1 point = ₹1, redeemable on any future order up to half that bill. No cards, no app — your phone number is the account.</p>')
+    +fold('Can I stack a promo code with points?','',
+      '<p>Yes. The promo applies first, points second, and points can cover up to half of what remains.</p>')
+    +fold('How far ahead do speciality cakes need to be ordered?','',
+      '<p>Three days for most builds, a week for tiered work. See <a class="linkish" href="#cakes">Speciality cakes</a> for the full picture.</p>')
+    +fold('How should I store the bakes?','',
+      '<p>Laminates and buns: airtight at room temperature, best within a day, revived in a hot oven for four minutes. Entremets, tarts and tiramisu: refrigerated, eaten within two days, never frozen.</p>')
+    +fold('I have an allergy — what’s in everything?','',
+      '<p>Every product’s allergens and full nutrition are listed under <a class="linkish" href="#nutrition">Nutritional info</a>. For severe allergies, call the atelier before ordering — our kitchens handle gluten, dairy, eggs and nuts daily.</p>')
+    +'</div>'};},
+  nutrition:function(){ return {title:'Nutritional info', sub:'Per piece, as served. Approximate values from our test kitchen.', wide:true, html:
+    '<div class="twrap"><table class="ntable"><thead><tr><th>Product</th><th>Energy (kcal)</th><th>Protein (g)</th><th>Carbs (g)</th><th>of which sugar (g)</th><th>Fat (g)</th><th style="text-align:left">Allergens</th></tr></thead><tbody>'
+    +PRODUCTS.map(function(p){ var n=NUTRITION[p.id]||[0,0,0,0,0,'—'];
+      return '<tr><td>'+esc(p.name)+'</td><td>'+n[0]+'</td><td>'+n[1]+'</td><td>'+n[2]+'</td><td>'+n[3]+'</td><td>'+n[4]+'</td><td style="text-align:left">'+esc(n[5])+'</td></tr>'; }).join('')
+    +'</tbody></table></div>'
+    +'<p class="hint" style="margin-top:1rem">All our kitchens handle gluten, dairy, eggs and nuts. Values are per single piece and vary slightly batch to batch — that’s what handmade means.</p>'};},
+  gifting:function(){ return {title:'Corporate gifting', sub:'Boxes that make Monday meetings suspiciously well-attended.', wide:true, html:
+    '<div class="prose"><p>Diwali hampers, client thank-yous, team milestones, wedding favours at scale — we build gift programmes from a dozen boxes to a few thousand, with your branding on the ribbon and our standard inside the box.</p></div>'
+    +'<div class="gift-grid">'
+    +'<div class="gift"><h3>The Dozen</h3><span class="from">from ₹2,400</span><p>Twelve-piece assorted box from the vitrine. Minimum 10 boxes, 48 hours’ notice. Card and ribbon included.</p></div>'
+    +'<div class="gift"><h3>The Festival Trunk</h3><span class="from">from ₹5,500</span><p>A keepsake trunk: torte, brownie batons, saffron biscotti, single-origin bar and a tin of our elaichi sugar. Branding on request.</p></div>'
+    +'<div class="gift"><h3>The Year of Cake</h3><span class="from">bespoke</span><p>A standing programme — birthdays, work anniversaries and festival drops for your whole team, managed by us on a calendar you set once.</p></div>'
+    +'</div>'
+    +'<div class="cta-band"><p>Tell us the occasion, the headcount and the date — we’ll send a tasting box to start.</p>'
+    +'<a class="btn wa-btn btn-sm" target="_blank" rel="noopener" href="'+giftWaLink('corporate gifting')+'">Talk on WhatsApp</a></div>'};},
+  privacy:function(){ return {title:'Privacy policy', sub:'Short, because we collect little.', wide:false, html:
+    '<div class="prose">'
+    +'<p>We collect what an order needs and nothing else: your name, phone number, delivery address (or map pin) if you choose delivery, and any note you write to the kitchen. Feedback you leave carries the name you type on it.</p>'
+    +'<h2>What we do with it</h2>'
+    +'<ul><li>Fulfil and track your orders, and call you when the box is ready.</li>'
+    +'<li>Run Crumb points, which are tied to your phone number.</li>'
+    +'<li>Keep kitchen notes (allergies, favourites) so we serve you better next time.</li></ul>'
+    +'<h2>What we never do</h2>'
+    +'<ul><li>Sell, rent or share your details with anyone outside the bakery.</li>'
+    +'<li>Send marketing you didn’t ask for.</li>'
+    +'<li>Keep data we no longer need — ask us to wipe your record and we will, points included.</li></ul>'
+    +'<p>Questions or deletion requests: message the atelier on WhatsApp or tell any counter staff. This is a demonstration site for a fictional bakery; treat this page as a template, not legal advice.</p>'
+    +'</div>'};},
+  cookies:function(){ return {title:'Cookie policy', sub:'The browser kind. The oven kind has its own page.', wide:false, html:
+    '<div class="prose">'
+    +'<p>This site sets no advertising or analytics cookies and loads no trackers. It uses your browser’s local storage for exactly three things:</p>'
+    +'<ul><li><b>Your box</b> — the items in your cart, so they survive a page refresh.</li>'
+    +'<li><b>Your details</b> — name, phone and address from your last order, so checkout pre-fills.</li>'
+    +'<li><b>The desk session</b> — a short-lived token if you log in to the Atelier desk.</li></ul>'
+    +'<p>All of it stays on your device, none of it identifies you to anyone else, and clearing your browser storage removes it completely.</p>'
+    +'</div>'};},
+  refunds:function(){ return {title:'Refund policy', sub:'If it isn’t right, we make it right.', wide:false, html:
+    '<div class="prose">'
+    +'<h2>The short version</h2>'
+    +'<p>If a bake arrives damaged, late past reason, or simply isn’t up to the standard you came for, tell us the same day and we will replace it or refund it in full — your choice. No forms, no photographs demanded, no interrogation.</p>'
+    +'<h2>The details</h2>'
+    +'<ul><li><b>Cancellations:</b> free until the order is marked “In the oven”. After that the tray is yours — we’ll hold it for pickup till closing.</li>'
+    +'<li><b>Speciality cakes:</b> free cancellation up to 48 hours before delivery; inside 48 hours we charge only for work already done.</li>'
+    +'<li><b>Refund method:</b> as you paid, or as Crumb points at 110% if you prefer — the extra 10% is the apology.</li></ul>'
+    +'</div>'};},
+  whistleblower:function(){ return {title:'Whistle-blower policy', sub:'The kitchen wall works both ways.', wide:false, html:
+    '<div class="prose">'
+    +'<p>Anyone — an employee, an apprentice, a supplier, a rider, a guest — who sees something at Kesar &amp; Crumb that shouldn’t be happening can report it and be protected for doing so. That covers food-safety shortcuts, billing dishonesty, mistreatment of staff or suppliers, and anything else that fails daylight.</p>'
+    +'<ul><li>Reports can be made to any atelier manager, or in writing addressed to the founders at the Khan Market atelier, marked confidential.</li>'
+    +'<li>Anonymous reports are investigated with the same seriousness as signed ones.</li>'
+    +'<li>Retaliation against a reporter — in scheduling, in contracts, in any form — is itself a firing offence.</li>'
+    +'<li>Every report gets an outcome within 30 days, told to the reporter where they are known.</li></ul>'
+    +'<p>This is a demonstration policy for a fictional company, published so the template exists rather than as legal advice.</p>'
+    +'</div>'};},
+  sitemap:function(){ return {title:'Sitemap', sub:'Every page in the bakery, one list.', wide:true, html:
+    '<div class="sitemap-cols">'
+    +'<div><h2>Shop</h2><ul><li><a href="#top" data-gohome="1">Home</a></li><li><a href="#products">Our products</a></li><li><a href="#cakes">Speciality cakes</a></li><li><a href="#checkout">Checkout</a></li><li><a href="#track">Track an order</a></li></ul></div>'
+    +'<div><h2>House</h2><ul><li><a href="#story">Our story</a></li><li><a href="#blog">The journal</a></li><li><a href="#csr">Community (CSR)</a></li><li><a href="#gifting">Corporate gifting</a></li><li><a href="#feedback">Leave feedback</a></li></ul></div>'
+    +'<div><h2>Reference</h2><ul><li><a href="#faqs">FAQs</a></li><li><a href="#nutrition">Nutritional info</a></li></ul></div>'
+    +'<div><h2>Fine print</h2><ul><li><a href="#privacy">Privacy policy</a></li><li><a href="#cookies">Cookie policy</a></li><li><a href="#refunds">Refund policy</a></li><li><a href="#whistleblower">Whistle-blower policy</a></li></ul></div>'
+    +'<div><h2>Back office</h2><ul><li><a href="#admin">Atelier desk</a></li></ul></div>'
+    +'</div>'};}
+};
+function renderStatic(key){
+  var p=STATIC_PAGES[key]();
+  pageShell(p.title, p.sub, p.html);
+  if(p.wide){ var pg=document.querySelector('.page'); if(pg) pg.classList.add('wide'); }
+}
+
 /* ================= ROUTER & EVENTS ================= */
 var lastView=null;
 function route(){
   var h=location.hash;
-  var view = h==='#admin'?'admin' : h==='#checkout'?'checkout' : h==='#track'?'track' : h==='#feedback'?'feedback' : 'shop';
+  var key=h.replace('#','');
+  var view = h==='#admin'?'admin' : h==='#checkout'?'checkout' : h==='#track'?'track' : h==='#feedback'?'feedback'
+           : STATIC_PAGES[key]?key : 'shop';
   if(view==='shop'&&lastView==='shop'){ return; }
   var prev=lastView;
   lastView=view;
@@ -1209,6 +1443,7 @@ function route(){
   else if(view==='checkout'){ if(prev!=='checkout') co.step=1; renderCheckout(); }
   else if(view==='track') renderTrack('');
   else if(view==='feedback') renderFeedback();
+  else if(STATIC_PAGES[view]) renderStatic(view);
   else renderShop();
 }
 
@@ -1270,6 +1505,12 @@ document.addEventListener('click', function(ev){
     readStep2(); co.mode=t.dataset.mode;
     document.querySelectorAll('#seg button').forEach(function(b){ b.classList.toggle('on', b===t); });
     var wrap=document.getElementById('f-addr-wrap'); if(wrap) wrap.hidden=(co.mode!=='delivery');
+    return;
+  }
+  if(t.dataset.addgo){
+    var ag=t.dataset.addgo;
+    if(!isSold(ag)){ cart[ag]=Math.min(20,(cart[ag]||0)+1); saveCart(); }
+    lastView=null; location.hash='#checkout';
     return;
   }
   if(t.id==='use-loc'){ readStep2(); useLocation(); return; }
