@@ -1,0 +1,16 @@
+{
+  "name": "kesar-crumb",
+  "version": "1.0.0",
+  "description": "Kesar & Crumb — self-hosted bakery shop + CRM (storefront, ordering, loyalty, promos, admin desk)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
